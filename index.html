@@ -2352,13 +2352,23 @@ function renderPairs() {
 function renderMap() {
   const svg = document.getElementById('mapSvg');
 
-  // セクション別にグループ化
-  const sections = {};
+  // 単元ごと → セクション別 にグループ化
+  // 単元の登場順を保ち、各単元内でセクションの登場順を保つ
+  const unitOrder = [];
+  const unitsMap = {}; // unit_id -> { unit_name, sections: {sec: [cards]}, sectionKeys: [] }
   ALL_CARDS.forEach(c => {
-    if (!sections[c.section]) sections[c.section] = [];
-    sections[c.section].push(c);
+    const uid = c.unit_id || '__default__';
+    if (!unitsMap[uid]) {
+      unitOrder.push(uid);
+      unitsMap[uid] = { unit_id: uid, unit_name: c.unit_name || '', sections: {}, sectionKeys: [] };
+    }
+    const u = unitsMap[uid];
+    if (!u.sections[c.section]) {
+      u.sections[c.section] = [];
+      u.sectionKeys.push(c.section);
+    }
+    u.sections[c.section].push(c);
   });
-  const sectionKeys = Object.keys(sections);
 
   // レイアウト計算
   const PANEL_W = 220;
@@ -2367,38 +2377,52 @@ function renderMap() {
   const PANEL_PAD = 12;
   const GAP_X = 60;
   const GAP_Y = 50;
+  const UNIT_HEADER_H = 50;  // 単元見出しの高さ
+  const UNIT_GAP = 40;       // 単元間の余白
 
-  // 2列レイアウト：左列・右列に交互に
+  // 単元見出しのリストと、各単元内のパネル配置を計算
+  const unitHeaders = []; // [{name, y, w}]
   const panels = {};
-  let leftY = 20, rightY = 20;
-  sectionKeys.forEach((sec, i) => {
-    const cards = sections[sec];
-    const h = HEADER_H + cards.length * ROW_H + PANEL_PAD;
-    if (i % 2 === 0) {
-      panels[sec] = {x: 20, y: leftY, w: PANEL_W, h};
-      leftY += h + GAP_Y;
-    } else {
-      panels[sec] = {x: 20 + PANEL_W + GAP_X, y: rightY, w: PANEL_W, h};
-      rightY += h + GAP_Y;
-    }
+  let curY = 20;
+  unitOrder.forEach(uid => {
+    const u = unitsMap[uid];
+    // 単元見出しの位置を記録
+    unitHeaders.push({ name: u.unit_name || uid, y: curY });
+    curY += UNIT_HEADER_H;
+
+    // この単元内のパネルを2列レイアウト
+    const startY = curY;
+    let leftY = startY, rightY = startY;
+    u.sectionKeys.forEach((sec, i) => {
+      const cards = u.sections[sec];
+      const h = HEADER_H + cards.length * ROW_H + PANEL_PAD;
+      if (i % 2 === 0) {
+        panels[uid + '|' + sec] = {x: 20, y: leftY, w: PANEL_W, h, cards, sec};
+        leftY += h + GAP_Y;
+      } else {
+        panels[uid + '|' + sec] = {x: 20 + PANEL_W + GAP_X, y: rightY, w: PANEL_W, h, cards, sec};
+        rightY += h + GAP_Y;
+      }
+    });
+    curY = Math.max(leftY, rightY) + UNIT_GAP;
   });
 
-  // 各カードの座標（パネル内での位置）
+  // 各カードの座標
   const nodePos = {};
-  sectionKeys.forEach(sec => {
-    const p = panels[sec];
-    sections[sec].forEach((c, i) => {
+  Object.keys(panels).forEach(key => {
+    const p = panels[key];
+    p.cards.forEach((c, i) => {
       nodePos[c.id] = {
         x: p.x,
         y: p.y + HEADER_H + i * ROW_H + ROW_H/2,
-        side: (panels[sec].x < PANEL_W) ? 'left' : 'right',
+        side: (p.x < PANEL_W) ? 'left' : 'right',
         panelX: p.x, panelW: p.w
       };
     });
   });
 
   const totalW = 20 + PANEL_W * 2 + GAP_X + 20;
-  const totalH = Math.max(leftY, rightY) + 20;
+  const totalH = curY + 20;
   svg.setAttribute('viewBox', `0 0 ${totalW} ${totalH}`);
   svg.setAttribute('width', totalW);
   svg.setAttribute('height', totalH);
@@ -2432,8 +2456,8 @@ function renderMap() {
 
   // ===== パネルを描く =====
   let panelHtml = '';
-  sectionKeys.forEach(sec => {
-    const p = panels[sec];
+  Object.keys(panels).forEach(key => {
+    const p = panels[key];
     panelHtml += `<g>
       <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="4"
             fill="var(--bg-soft)" stroke="var(--line)" stroke-width="1"/>
@@ -2442,7 +2466,18 @@ function renderMap() {
       <line x1="${p.x}" y1="${p.y + HEADER_H}" x2="${p.x + p.w}" y2="${p.y + HEADER_H}"
             stroke="var(--line)" stroke-width="0.5"/>
       <text x="${p.x + 14}" y="${p.y + HEADER_H/2 + 5}" font-size="13"
-            font-family="Noto Sans JP, sans-serif" font-weight="600" fill="var(--ink)">${escapeHtml(sec)}</text>
+            font-family="Noto Sans JP, sans-serif" font-weight="600" fill="var(--ink)">${escapeHtml(p.sec)}</text>
+    </g>`;
+  });
+
+  // ===== 単元見出しを描く =====
+  let unitHeaderHtml = '';
+  unitHeaders.forEach(h => {
+    unitHeaderHtml += `<g>
+      <text x="20" y="${h.y + 24}" font-size="18"
+            font-family="Noto Sans JP, sans-serif" font-weight="700" fill="var(--accent)">${escapeHtml(h.name)}</text>
+      <line x1="20" y1="${h.y + 36}" x2="${totalW - 20}" y2="${h.y + 36}"
+            stroke="var(--accent)" stroke-width="1.5" opacity="0.5"/>
     </g>`;
   });
 
@@ -2468,7 +2503,7 @@ function renderMap() {
     </g>`;
   });
 
-  svg.innerHTML = panelHtml + edges + nodes;
+  svg.innerHTML = unitHeaderHtml + panelHtml + edges + nodes;
 
   svg.querySelectorAll('.map-node').forEach(g => {
     g.addEventListener('mouseenter', () => highlightConnections(g.dataset.cid, true));
