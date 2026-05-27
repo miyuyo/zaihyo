@@ -1,0 +1,2637 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a1a1a">
+<title>財表暗記ノート</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700;800;900&family=M+PLUS+1p:wght@500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf7f2;
+    --bg-soft: #f3ede3;
+    --ink: #1a1a1a;
+    --ink-soft: #4a4a4a;
+    --ink-mute: #8a8a8a;
+    --line: #d9d2c5;
+    --line-soft: #ebe5d8;
+    --accent: #8b3a3a;
+    --accent-soft: #b8786c;
+    --gold: #a88a5c;
+    --imp-a: #8b3a3a;
+    --imp-b: #a88a5c;
+    --imp-c: #6b7a5c;
+    --good: #5a7a4a;
+    --bad: #b85a3a;
+    --paper-shadow: 0 1px 2px rgba(60, 40, 20, 0.04), 0 4px 12px rgba(60, 40, 20, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1a17;
+      --bg-soft: #25221d;
+      --ink: #ebe5d8;
+      --ink-soft: #c0b8a8;
+      --ink-mute: #8a8378;
+      --line: #3a3530;
+      --line-soft: #2a2622;
+      --accent: #d49a8a;
+      --accent-soft: #b8786c;
+      --gold: #c9a878;
+      --imp-a: #d49a8a;
+      --imp-b: #c9a878;
+      --imp-c: #9aaa8a;
+      --good: #9aaa8a;
+      --bad: #d49a8a;
+      --paper-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 16px rgba(0,0,0,0.25);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overscroll-behavior-y: contain; }
+  body {
+    font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.75;
+    font-size: 15px;
+    font-feature-settings: "palt" 1;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .serif { font-family: 'Noto Sans JP', sans-serif; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+  button:disabled { opacity: 0.35; cursor: not-allowed; }
+  input, textarea, select { font-family: inherit; font-size: inherit; color: inherit; }
+
+  /* ヘッダー */
+  header {
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 20px 12px;
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(10px);
+    padding-top: max(14px, env(safe-area-inset-top));
+  }
+  .header-top {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  }
+  .brand {
+    font-family: 'M PLUS 1p', 'Noto Sans JP', sans-serif;
+    font-size: 20px; font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+  .brand-mark { color: var(--accent); margin-right: 6px; }
+  .header-meta {
+    font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.1em;
+  }
+  nav {
+    display: flex; gap: 2px; margin-top: 14px;
+    overflow-x: auto; scrollbar-width: none;
+    margin-left: -20px; margin-right: -20px; padding: 0 20px 2px;
+  }
+  nav::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 6px 14px 8px; font-size: 13px; font-weight: 500;
+    color: var(--ink-mute); border-bottom: 2px solid transparent;
+    white-space: nowrap; letter-spacing: 0.05em;
+    transition: color .15s, border-color .15s;
+  }
+  .tab.active { color: var(--accent); border-color: var(--accent); }
+  .tab:hover:not(.active) { color: var(--ink-soft); }
+
+  /* メインレイアウト */
+  main {
+    max-width: 760px; margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+  .view { display: none; animation: fadeIn .25s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  /* ダッシュボード */
+  .dash-greeting {
+    font-family: 'M PLUS 1p', 'Noto Sans JP', sans-serif;
+    font-size: 26px; font-weight: 800;
+    margin-bottom: 4px; letter-spacing: 0.02em;
+  }
+  .dash-sub {
+    color: var(--ink-mute); font-size: 13px;
+    margin-bottom: 28px; letter-spacing: 0.05em;
+  }
+  .stat-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px; margin-bottom: 28px;
+  }
+  .stat {
+    background: var(--bg-soft);
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    padding: 16px 18px;
+    position: relative;
+  }
+  .stat-label {
+    font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .stat-value {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 28px; font-weight: 600; line-height: 1;
+  }
+  .stat-unit { font-size: 13px; color: var(--ink-mute); margin-left: 4px; }
+  .stat .imp-a .stat-value { color: var(--imp-a); }
+
+  .matrix {
+    background: var(--bg-soft);
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .matrix-title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px; font-weight: 600;
+    margin-bottom: 14px; display: flex; justify-content: space-between;
+  }
+  .matrix-grid {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr 1fr;
+    gap: 1px; background: var(--line-soft);
+    border: 1px solid var(--line-soft);
+    font-size: 12px;
+  }
+  .matrix-cell {
+    background: var(--bg);
+    padding: 10px 8px; text-align: center;
+    min-width: 0;
+  }
+  .matrix-cell.header { background: var(--bg-soft); font-weight: 600; color: var(--ink-mute); font-size: 11px; letter-spacing: 0.08em; }
+  .matrix-cell.row-label { text-align: left; padding-left: 10px; font-weight: 600; }
+  .matrix-cell.priority { background: rgba(139, 58, 58, 0.06); font-weight: 600; }
+  .matrix-cell .num { font-family: 'Noto Sans JP', sans-serif; font-size: 18px; }
+
+  .start-btn {
+    display: block; width: 100%;
+    background: var(--ink); color: var(--bg);
+    padding: 16px; border-radius: 4px;
+    font-size: 14px; font-weight: 600; letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    transition: transform .1s, opacity .15s;
+  }
+  .start-btn:active { transform: scale(0.98); }
+  .start-btn:hover { opacity: 0.9; }
+  .start-btn.secondary {
+    background: transparent; color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .start-btn.primary-accent {
+    background: var(--accent);
+  }
+
+  /* 学習画面 */
+  .study-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; font-size: 12px; color: var(--ink-mute);
+    letter-spacing: 0.08em;
+  }
+  .progress-bar {
+    height: 2px; background: var(--line-soft);
+    border-radius: 2px; overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    transition: width .3s ease;
+  }
+
+  .card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    padding: 28px 26px;
+    box-shadow: var(--paper-shadow);
+    min-height: 320px;
+    display: flex; flex-direction: column;
+    position: relative;
+  }
+  .card-meta {
+    display: flex; gap: 8px; align-items: center;
+    font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.08em; margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .imp-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 2px;
+    font-weight: 600; font-size: 10px;
+    letter-spacing: 0.15em;
+  }
+  .imp-badge.A { background: rgba(139, 58, 58, 0.12); color: var(--imp-a); }
+  .imp-badge.B { background: rgba(168, 138, 92, 0.15); color: var(--imp-b); }
+  .imp-badge.C { background: rgba(107, 122, 92, 0.15); color: var(--imp-c); }
+
+  .imp-current {
+    font-size: 10px; color: var(--ink-mute);
+    letter-spacing: 0.15em; margin-right: 2px;
+  }
+  .imp-switcher {
+    display: inline-flex; gap: 2px;
+    background: var(--bg); padding: 2px;
+    border-radius: 3px; border: 1px solid var(--line-soft);
+  }
+  .imp-btn {
+    padding: 3px 9px; font-size: 11px;
+    font-weight: 700; letter-spacing: 0.1em;
+    border-radius: 2px;
+    color: var(--ink-mute);
+    transition: all .15s;
+    min-width: 24px;
+  }
+  .imp-btn:hover { background: var(--bg-soft); color: var(--ink); }
+  .imp-btn.active.imp-A { background: var(--imp-a); color: var(--bg); }
+  .imp-btn.active.imp-B { background: var(--imp-b); color: var(--bg); }
+  .imp-btn.active.imp-C { background: var(--imp-c); color: var(--bg); }
+  .imp-edited-mark {
+    color: var(--gold); font-size: 9px;
+    margin-left: 2px;
+    line-height: 1;
+  }
+  .section-tag {
+    color: var(--ink-mute); font-size: 11px;
+  }
+  .card-topic {
+    font-family: 'M PLUS 1p', 'Noto Sans JP', sans-serif;
+    font-size: 19px; font-weight: 800;
+    margin-bottom: 18px; letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+  .card-question {
+    color: var(--ink-soft); font-size: 14px;
+    margin-bottom: 24px;
+    padding-left: 12px; border-left: 2px solid var(--accent-soft);
+  }
+  .answer-area {
+    flex: 1; display: flex; flex-direction: column;
+  }
+  .fill-text {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 16px; line-height: 2;
+    color: var(--ink);
+  }
+  .blank {
+    display: inline-block;
+    min-width: 60px; text-align: center;
+    border-bottom: 1.5px solid var(--ink);
+    padding: 0 6px; margin: 0 2px;
+    color: transparent;
+    cursor: pointer;
+    border-radius: 2px 2px 0 0;
+    transition: color .25s, background .25s, border-color .25s, transform .1s;
+    position: relative;
+  }
+  .blank:hover:not(.revealed) {
+    background: rgba(139, 58, 58, 0.08);
+  }
+  .blank:active:not(.revealed) {
+    transform: scale(0.96);
+  }
+  .blank.revealed {
+    color: var(--accent);
+    background: rgba(139, 58, 58, 0.10);
+    border-bottom-color: var(--accent);
+    cursor: default;
+    font-family: 'M PLUS 1p', 'Noto Sans JP', sans-serif;
+    font-weight: 800;
+    font-size: 1.05em;
+    letter-spacing: 0.03em;
+    padding: 2px 8px;
+    animation: blankReveal .4s cubic-bezier(0.2, 0.8, 0.3, 1.2);
+  }
+  @keyframes blankReveal {
+    0% { transform: scale(0.85); opacity: 0; background: rgba(139, 58, 58, 0.25); }
+    60% { transform: scale(1.08); }
+    100% { transform: scale(1); opacity: 1; background: rgba(139, 58, 58, 0.10); }
+  }
+  .blank.user-input {
+    color: var(--ink-soft);
+    border-bottom-color: var(--accent-soft);
+  }
+  .fill-hint {
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.1em;
+    text-align: center;
+    font-style: italic;
+  }
+  .answer-reveal {
+    animation: revealSlide .35s cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  @keyframes revealSlide {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: none; }
+  }
+  .write-input {
+    width: 100%; min-height: 160px;
+    background: var(--bg); border: 1px solid var(--line);
+    border-radius: 4px; padding: 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px; line-height: 1.9;
+    resize: vertical;
+  }
+  .write-input:focus { outline: none; border-color: var(--accent-soft); }
+  .write-result {
+    margin-top: 14px; padding: 14px;
+    background: var(--bg); border: 1px solid var(--line-soft);
+    border-radius: 4px; font-size: 13px;
+  }
+  .write-result .label {
+    font-size: 11px; color: var(--ink-mute); letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+  .kw-match {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; margin: 3px;
+    border-radius: 2px; font-size: 12px;
+  }
+  .kw-match.hit { background: rgba(90, 122, 74, 0.15); color: var(--good); }
+  .kw-match.hit-disorder {
+    background: rgba(168, 138, 92, 0.18); color: var(--imp-b);
+    border: 1px dashed var(--imp-b);
+    padding: 2px 7px;
+  }
+  .kw-match.miss { background: rgba(184, 90, 58, 0.12); color: var(--bad); text-decoration: line-through; }
+  .kw-pos {
+    font-size: 10px; opacity: 0.85;
+    padding: 1px 5px; background: rgba(255,255,255,0.4); border-radius: 2px;
+  }
+  @media (prefers-color-scheme: dark) {
+    .kw-pos { background: rgba(0,0,0,0.25); }
+  }
+  .verdict-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 4px;
+  }
+  .verdict-badge {
+    display: inline-block; padding: 4px 12px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px; font-weight: 600;
+    border-radius: 2px;
+  }
+  .verdict-badge.good { background: var(--good); color: var(--bg); }
+  .verdict-badge.mid { background: var(--imp-b); color: var(--bg); }
+  .verdict-badge.bad { background: var(--bad); color: var(--bg); }
+  .verdict-count {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px; color: var(--ink-soft);
+  }
+  .verdict-detail {
+    font-size: 12px; color: var(--ink-mute);
+    margin-bottom: 12px; letter-spacing: 0.03em;
+  }
+  .kw-row-label {
+    font-size: 10px; color: var(--ink-mute);
+    letter-spacing: 0.12em; margin: 8px 0 4px;
+  }
+  .kw-row { display: flex; flex-wrap: wrap; }
+  .ans-hl {
+    padding: 1px 4px; border-radius: 2px;
+    font-weight: 800;
+  }
+  .ans-hl.hit { background: rgba(168, 138, 92, 0.30); color: var(--gold); }
+  .ans-hl.miss { background: rgba(184, 90, 58, 0.22); color: var(--bad); }
+  .answer-text {
+    font-family: 'M PLUS 1p', 'Noto Sans JP', sans-serif;
+    font-size: 16px;
+    line-height: 2;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+
+  .related-box {
+    margin-top: 20px; padding: 14px;
+    background: var(--bg); border-radius: 4px;
+    border-left: 3px solid var(--gold);
+  }
+  .related-box-title {
+    font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.12em; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .related-box-title::before {
+    content: "❖"; color: var(--gold);
+  }
+  .related-item {
+    display: block; width: 100%; text-align: left;
+    padding: 8px 10px; margin-bottom: 4px;
+    background: var(--bg-soft); border-radius: 3px;
+    font-size: 13px;
+    transition: background .15s;
+  }
+  .related-item:hover { background: var(--line-soft); }
+  .related-type {
+    display: inline-block; font-size: 10px; padding: 1px 6px;
+    border-radius: 2px; margin-right: 8px;
+    background: var(--bg); color: var(--ink-mute); letter-spacing: 0.08em;
+  }
+
+  /* アクション */
+  .action-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-top: 20px;
+  }
+  .action-row.three { grid-template-columns: 1fr 1fr 1fr; }
+  .act {
+    padding: 14px; border-radius: 4px;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.08em;
+    border: 1px solid var(--line);
+    transition: all .15s;
+  }
+  .act:hover { background: var(--bg-soft); }
+  .act.primary { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .act.primary:hover { opacity: 0.88; background: var(--ink); }
+  .act.good { color: var(--good); border-color: var(--good); }
+  .act.good:hover { background: rgba(90, 122, 74, 0.08); }
+  .act.bad { color: var(--bad); border-color: var(--bad); }
+  .act.bad:hover { background: rgba(184, 90, 58, 0.08); }
+  .act.mid { color: var(--gold); border-color: var(--gold); }
+  .act.mid:hover { background: rgba(168, 138, 92, 0.08); }
+
+  /* セットアップ画面 */
+  .setup-grid {
+    display: grid; gap: 10px; margin-bottom: 24px;
+  }
+  .setup-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; background: var(--bg-soft);
+    border: 1px solid var(--line-soft); border-radius: 4px;
+  }
+  .setup-row-label { font-size: 13px; }
+  .setup-row-sub { font-size: 11px; color: var(--ink-mute); margin-top: 2px; }
+  .chip-group { display: flex; gap: 4px; flex-wrap: wrap; }
+  .chip {
+    padding: 6px 12px; font-size: 12px;
+    border: 1px solid var(--line); border-radius: 99px;
+    transition: all .15s;
+  }
+  .chip.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .toggle {
+    width: 42px; height: 24px; background: var(--line);
+    border-radius: 99px; position: relative;
+    transition: background .2s;
+  }
+  .toggle::after {
+    content: ""; position: absolute; top: 2px; left: 2px;
+    width: 20px; height: 20px; background: white;
+    border-radius: 99px; transition: transform .2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle.on::after { transform: translateX(18px); }
+
+  .setup-note {
+    margin-top: 20px; padding: 16px 18px;
+    background: var(--bg);
+    border: 1px solid var(--line-soft);
+    border-left: 3px solid var(--gold);
+    border-radius: 4px;
+  }
+  .setup-note-title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 13px; font-weight: 600;
+    margin-bottom: 8px; color: var(--ink);
+  }
+  .setup-note-body {
+    font-size: 12px; line-height: 1.85;
+    color: var(--ink-soft);
+  }
+
+  /* マップ画面 */
+  .map-wrap {
+    background: var(--bg-soft); border: 1px solid var(--line-soft);
+    border-radius: 4px; padding: 20px; margin-bottom: 16px;
+  }
+  .map-title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 15px; font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .map-sub {
+    font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.08em; margin-bottom: 16px;
+  }
+  .map-canvas-wrap {
+    width: 100%; overflow-x: auto; overflow-y: hidden;
+    background: var(--bg); border-radius: 3px;
+    border: 1px solid var(--line-soft);
+    padding: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .map-canvas { display: block; }
+  .map-node { transition: opacity .15s; }
+  .map-node:hover rect { fill: rgba(139, 58, 58, 0.06) !important; }
+  .map-legend {
+    display: flex; gap: 14px; margin-top: 12px;
+    flex-wrap: wrap; font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.05em;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-line {
+    width: 18px; height: 2px;
+  }
+  .legend-line.taihi { background: var(--accent); }
+  .legend-line.set { background: var(--gold); }
+
+  /* 単元一覧 */
+  .units-section { margin-top: 28px; }
+  .units-title {
+    font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.12em; margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .units-list { display: flex; flex-direction: column; gap: 6px; }
+  .unit-row {
+    display: flex; align-items: center; gap: 14px;
+    padding: 12px 14px; width: 100%;
+    background: var(--bg-soft); border: 1px solid var(--line-soft);
+    border-radius: 4px;
+    text-align: left;
+    transition: background .12s, border-color .12s;
+    cursor: pointer;
+  }
+  .unit-row:hover {
+    background: var(--bg); border-color: var(--line);
+  }
+  .unit-info { flex: 1; min-width: 0; }
+  .unit-name {
+    font-family: 'M PLUS 1p', 'Noto Sans JP', sans-serif;
+    font-weight: 700; font-size: 14px;
+    color: var(--ink);
+  }
+  .unit-meta {
+    font-size: 11px; color: var(--ink-mute);
+    letter-spacing: 0.05em; margin-top: 2px;
+  }
+  .unit-progress { width: 90px; }
+  .unit-progress-bar {
+    height: 4px; background: var(--line-soft);
+    border-radius: 4px; overflow: hidden;
+  }
+  .unit-progress-fill {
+    height: 100%; background: var(--accent);
+    transition: width .3s ease;
+  }
+
+  /* ペアグループ */
+  .pair-card {
+    background: var(--bg-soft); border: 1px solid var(--line-soft);
+    border-radius: 4px; padding: 18px; margin-bottom: 12px;
+  }
+  .pair-card-name {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px; font-weight: 600;
+    margin-bottom: 10px; color: var(--accent);
+  }
+  .pair-cards-list {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .pair-mini {
+    padding: 6px 12px; font-size: 12px;
+    background: var(--bg); border: 1px solid var(--line);
+    border-radius: 99px; cursor: pointer;
+    transition: background .15s;
+  }
+  .pair-mini:hover { background: var(--line-soft); }
+
+  /* 完了画面 */
+  .complete {
+    text-align: center; padding: 40px 20px;
+  }
+  .complete-icon {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 48px; color: var(--accent); margin-bottom: 12px;
+  }
+  .complete-title {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 22px; font-weight: 600; margin-bottom: 8px;
+  }
+  .complete-stats {
+    display: inline-flex; gap: 24px;
+    margin: 20px 0 30px; padding: 16px 24px;
+    background: var(--bg-soft); border-radius: 4px;
+  }
+  .complete-stat-num {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 26px; font-weight: 600;
+  }
+  .complete-stat-label { font-size: 11px; color: var(--ink-mute); letter-spacing: 0.1em; }
+
+  /* レスポンシブ */
+  @media (max-width: 480px) {
+    main { padding: 18px 16px 60px; }
+    .card { padding: 22px 18px; }
+    .card-topic { font-size: 17px; }
+    .fill-text { font-size: 15px; }
+    .dash-greeting { font-size: 22px; }
+  }
+  @media (min-width: 768px) {
+    main { padding: 32px 24px 80px; }
+    .card { padding: 36px 36px; min-height: 380px; }
+    body { font-size: 16px; }
+  }
+
+  /* iPadなど */
+  @media (min-width: 768px) and (hover: none) {
+    .card { font-size: 16px; }
+  }
+
+  /* ヘルプテキスト */
+  .empty {
+    text-align: center; padding: 60px 20px;
+    color: var(--ink-mute); font-size: 13px;
+  }
+  .empty-title { font-size: 16px; color: var(--ink-soft); margin-bottom: 6px; font-family: 'Noto Sans JP', sans-serif; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <div class="brand"><span class="brand-mark">◆</span><span class="serif">財表暗記ノート</span></div>
+    <div class="header-meta" id="dateLabel"></div>
+  </div>
+  <nav>
+    <button class="tab active" data-view="dash">ホーム</button>
+    <button class="tab" data-view="study">学習</button>
+    <button class="tab" data-view="pairs">セット</button>
+    <button class="tab" data-view="map">関連マップ</button>
+    <button class="tab" data-view="settings">設定</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ホーム -->
+  <section class="view active" id="view-dash">
+    <h1 class="dash-greeting" id="greeting">今日も一歩</h1>
+    <div class="dash-sub" id="greetingSub">— 財務諸表論 理論暗記 —</div>
+
+    <div class="stat-grid">
+      <div class="stat"><div class="stat-label">総カード数</div><div class="stat-value" id="statTotal">0</div></div>
+      <div class="stat imp-a"><div class="stat-label">A論点 定着率</div><div class="stat-value" id="statARate">—<span class="stat-unit">%</span></div></div>
+      <div class="stat"><div class="stat-label">今日の復習</div><div class="stat-value" id="statDue">0</div></div>
+      <div class="stat"><div class="stat-label">未着手</div><div class="stat-value" id="statNew">0</div></div>
+    </div>
+
+    <div class="matrix">
+      <div class="matrix-title">
+        <span>重要度 × 定着度</span>
+        <span style="font-size: 11px; color: var(--ink-mute); font-family: inherit; font-weight: normal;">枠が空いているところを優先</span>
+      </div>
+      <div class="matrix-grid" id="matrix"></div>
+    </div>
+
+    <button class="start-btn primary-accent" id="btnStartDue">今日の復習を始める</button>
+    <button class="start-btn" id="btnStartA">A論点を集中学習</button>
+    <button class="start-btn secondary" id="btnStartAll">全カードから出題</button>
+
+    <div class="units-section" id="unitsSection"></div>
+  </section>
+
+  <!-- 学習 -->
+  <section class="view" id="view-study">
+    <div id="studyContent"></div>
+  </section>
+
+  <!-- ペアグループ -->
+  <section class="view" id="view-pairs">
+    <h2 class="dash-greeting" style="font-size: 22px;">セットで覚える</h2>
+    <div class="dash-sub">本試験の比較問題対策。グループを選ぶと連続出題できます。</div>
+    <div id="pairList"></div>
+  </section>
+
+  <!-- 関連マップ -->
+  <section class="view" id="view-map">
+    <h2 class="dash-greeting" style="font-size: 22px;">関連マップ</h2>
+    <div class="dash-sub">セット/対比で覚えるべきカードを線で結びました</div>
+    <div class="map-wrap">
+      <div class="map-title">財務会計総論Ⅰ-1</div>
+      <div class="map-sub">カード名にマウスを乗せると関連先がハイライト。タップで学習開始</div>
+      <div class="map-legend" style="margin-bottom: 12px; margin-top: 0;">
+        <div class="legend-item"><span class="legend-line taihi"></span>対比（2つを比較して覚える）</div>
+        <div class="legend-item"><span class="legend-line set"></span>セット（一緒に覚える）</div>
+        <div class="legend-item"><span style="width:8px;height:8px;border-radius:50%;background:var(--imp-a);"></span>A論点</div>
+        <div class="legend-item"><span style="width:8px;height:8px;border-radius:50%;background:var(--imp-b);"></span>B論点</div>
+      </div>
+      <div class="map-canvas-wrap">
+        <svg class="map-canvas" id="mapSvg" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 設定 -->
+  <section class="view" id="view-settings">
+    <h2 class="dash-greeting" style="font-size: 22px;">設定</h2>
+    <div class="dash-sub">学習の進め方をカスタマイズ</div>
+
+    <div class="setup-grid">
+      <div class="setup-row">
+        <div>
+          <div class="setup-row-label">出題モード</div>
+          <div class="setup-row-sub">キーワード穴埋め / 全文記述</div>
+        </div>
+        <div class="chip-group" id="modeChips">
+          <button class="chip active" data-mode="fill">穴埋め</button>
+          <button class="chip" data-mode="write">記述</button>
+        </div>
+      </div>
+      <div class="setup-row">
+        <div>
+          <div class="setup-row-label">重要度フィルタ</div>
+          <div class="setup-row-sub">学習に含める重要度</div>
+        </div>
+        <div class="chip-group" id="impChips">
+          <button class="chip active" data-imp="A">A</button>
+          <button class="chip active" data-imp="B">B</button>
+          <button class="chip active" data-imp="C">C</button>
+        </div>
+      </div>
+      <div class="setup-row">
+        <div>
+          <div class="setup-row-label">出題数</div>
+          <div class="setup-row-sub">1セッションあたり</div>
+        </div>
+        <div class="chip-group" id="countChips">
+          <button class="chip" data-count="5">5</button>
+          <button class="chip active" data-count="10">10</button>
+          <button class="chip" data-count="20">20</button>
+          <button class="chip" data-count="0">無制限</button>
+        </div>
+      </div>
+      <div class="setup-row">
+        <div>
+          <div class="setup-row-label">関連カードを表示</div>
+          <div class="setup-row-sub">解答後に対比・セットを案内</div>
+        </div>
+        <div class="toggle on" id="toggleRelated"></div>
+      </div>
+      <div class="setup-row">
+        <div>
+          <div class="setup-row-label">重要度を初期値に戻す</div>
+          <div class="setup-row-sub" id="impOverrideCount">変更したカードを全て初期値に戻す</div>
+        </div>
+        <button class="chip" id="btnResetImp" style="color: var(--gold); border-color: var(--gold);">戻す</button>
+      </div>
+      <div class="setup-row">
+        <div>
+          <div class="setup-row-label">学習データのリセット</div>
+          <div class="setup-row-sub">SRS履歴・正答率を初期化</div>
+        </div>
+        <button class="chip" id="btnReset" style="color: var(--bad); border-color: var(--bad);">リセット</button>
+      </div>
+      <div class="setup-row">
+        <div>
+          <div class="setup-row-label">バックアップ</div>
+          <div class="setup-row-sub">学習進捗のエクスポート/インポート</div>
+        </div>
+        <div class="chip-group">
+          <button class="chip" id="btnExport">書出</button>
+          <button class="chip" id="btnImport">取込</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="setup-note">
+      <div class="setup-note-title">記述モードで予測変換が気になるとき</div>
+      <div class="setup-note-body">
+        記述モードでは予測変換やオートコレクトを可能な限り抑制していますが、iOSやAndroidのキーボード予測（QuickType等）はWebアプリ側から完全に無効化できません。気になる場合はOS側の設定で一時的にオフにしてください。<br><br>
+        <span style="color: var(--ink); font-weight: 600;">iPhone/iPad</span>：設定 → 一般 → キーボード → 「自動修正」「予測」をオフ<br>
+        <span style="color: var(--ink); font-weight: 600;">Android</span>：設定 → 言語と入力 → 使用中のキーボード → 予測テキスト/自動修正をオフ<br>
+        <span style="color: var(--ink); font-weight: 600;">Mac/Windows</span>：通常のIMEなら予測は控えめなのでそのままでOK
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+// ========== データ読み込み ==========
+let ALL_CARDS = [];
+let CARD_BY_ID = {};
+const STORAGE_KEY = 'zaihyo-v1';
+const IMP_OVERRIDE_KEY = 'zaihyo-imp-override-v1';
+
+// ユーザーが手動で変更した重要度（cardId → 'A'/'B'/'C'）
+let IMP_OVERRIDE = (() => {
+  try { return JSON.parse(localStorage.getItem(IMP_OVERRIDE_KEY)) || {}; }
+  catch(e) { return {}; }
+})();
+
+function getImportance(card) {
+  if (!card) return 'B';
+  if (IMP_OVERRIDE[card.id]) return IMP_OVERRIDE[card.id];
+  return card.importance;
+}
+function setImportance(cardId, imp) {
+  const card = CARD_BY_ID[cardId];
+  if (!card) return;
+  if (imp === card.importance) {
+    // 初期値と同じならオーバーライド削除
+    delete IMP_OVERRIDE[cardId];
+  } else {
+    IMP_OVERRIDE[cardId] = imp;
+  }
+  localStorage.setItem(IMP_OVERRIDE_KEY, JSON.stringify(IMP_OVERRIDE));
+}
+
+// 内蔵データ（GitHub Pagesで動かす場合、別fetchも可能だがCORS考慮で内蔵化）
+const EMBEDDED_DATA = {
+  "unit_id": "dento-01",
+  "unit_name": "財務会計総論Ⅰ-1",
+  "category": "伝統理論編",
+  "cards": [
+    {
+      "id": "d01-01-01",
+      "section": "1.財務会計",
+      "topic": "財務会計の意義",
+      "importance": "A",
+      "question": "財務会計とは何か。",
+      "answer_full": "財務会計とは、株主、債権者、投資家などの企業外部の利害関係者に対して、会計情報を提供することを目的とする企業会計をいう。",
+      "keywords": [
+        "投資家",
+        "外部"
+      ],
+      "related": [],
+      "pair_group": null
+    },
+    {
+      "id": "d01-01-02",
+      "section": "1.財務会計",
+      "topic": "財務会計の目的2つ",
+      "importance": "A",
+      "question": "財務会計の目的を2つ述べよ。",
+      "answer_full": "財務会計の目的は2つある。伝統的な考え方は会計責任説であり、今日重視されているのは意思決定有用性説である。",
+      "keywords": [
+        "会計責任",
+        "意思決定有用性"
+      ],
+      "related": [
+        {
+          "id": "d01-01-03",
+          "type": "対応",
+          "note": "機能2つと対応"
+        },
+        {
+          "id": "d01-01-04",
+          "type": "対応",
+          "note": "利益の特質2つと対応"
+        }
+      ],
+      "pair_group": "財務会計の二元構造"
+    },
+    {
+      "id": "d01-01-03",
+      "section": "1.財務会計",
+      "topic": "財務会計の機能2つ",
+      "importance": "A",
+      "question": "財務会計の果たすべき役割(機能)を2つ述べよ。",
+      "answer_full": "財務会計の果たすべき役割(機能)は2つある。会計責任説から導かれるのが利害調整機能であり、意思決定有用性説から導かれるのが情報提供機能である。",
+      "keywords": [
+        "利害調整",
+        "情報提供"
+      ],
+      "related": [
+        {
+          "id": "d01-01-02",
+          "type": "対応",
+          "note": "目的2つから導かれる"
+        },
+        {
+          "id": "d01-01-04",
+          "type": "対応",
+          "note": "利益の特質2つと対応"
+        }
+      ],
+      "pair_group": "財務会計の二元構造"
+    },
+    {
+      "id": "d01-01-04",
+      "section": "1.財務会計",
+      "topic": "利益の特質2つ",
+      "importance": "A",
+      "question": "財務会計により算出される利益の2つの特質を述べよ。",
+      "answer_full": "財務会計により算出される利益は2つの特質を有している。利害調整機能から導かれる利益の特質が「分配可能性」であり、情報提供機能から導かれる利益の特質が「業績指標性」である。",
+      "keywords": [
+        "分配可能性",
+        "業績指標性"
+      ],
+      "related": [
+        {
+          "id": "d01-01-02",
+          "type": "対応",
+          "note": "目的2つから導かれる"
+        },
+        {
+          "id": "d01-01-03",
+          "type": "対応",
+          "note": "機能2つから導かれる"
+        }
+      ],
+      "pair_group": "財務会計の二元構造"
+    },
+    {
+      "id": "d01-01-05",
+      "section": "1.財務会計",
+      "topic": "財務会計の目的(会計責任説)",
+      "importance": "A",
+      "question": "会計責任説に基づく財務会計の目的を述べよ。",
+      "answer_full": "経営者は、株主及び債権者に対して会計報告を行う責任があり、その会計責任を遂行することが財務会計の目的である。",
+      "keywords": [
+        "株主",
+        "会計報告",
+        "会計責任"
+      ],
+      "related": [
+        {
+          "id": "d01-01-06",
+          "type": "対比",
+          "note": "もう一方の目的説"
+        }
+      ],
+      "pair_group": "目的の二説"
+    },
+    {
+      "id": "d01-01-06",
+      "section": "1.財務会計",
+      "topic": "財務会計の目的(意思決定有用性説)",
+      "importance": "A",
+      "question": "意思決定有用性説に基づく財務会計の目的を述べよ。",
+      "answer_full": "投資家の経済的意思決定に役立つ有用な情報を提供することが財務会計の目的である。",
+      "keywords": [
+        "投資家",
+        "経済的意思決定",
+        "有用な情報"
+      ],
+      "related": [
+        {
+          "id": "d01-01-05",
+          "type": "対比",
+          "note": "もう一方の目的説"
+        }
+      ],
+      "pair_group": "目的の二説"
+    },
+    {
+      "id": "d01-01-07",
+      "section": "1.財務会計",
+      "topic": "財務会計の機能(利害調整機能)",
+      "importance": "A",
+      "question": "利害調整機能とは何か。",
+      "answer_full": "利害調整機能とは、企業の利害関係者相互間の私的な利害を調整する機能をいう。",
+      "keywords": [
+        "利害関係者",
+        "利害",
+        "調整"
+      ],
+      "related": [
+        {
+          "id": "d01-01-08",
+          "type": "対比",
+          "note": "もう一方の機能"
+        }
+      ],
+      "pair_group": "機能の二説"
+    },
+    {
+      "id": "d01-01-08",
+      "section": "1.財務会計",
+      "topic": "財務会計の機能(情報提供機能)",
+      "importance": "A",
+      "question": "情報提供機能とは何か。",
+      "answer_full": "情報提供機能とは、投資家の経済的意思決定に役立つ有用な情報を提供する機能をいう。",
+      "keywords": [
+        "投資家",
+        "経済的意思決定",
+        "有用な情報"
+      ],
+      "related": [
+        {
+          "id": "d01-01-07",
+          "type": "対比",
+          "note": "もう一方の機能"
+        }
+      ],
+      "pair_group": "機能の二説"
+    },
+    {
+      "id": "d01-01-09",
+      "section": "1.財務会計",
+      "topic": "利益の特質(分配可能性)",
+      "importance": "A",
+      "question": "利益の特質である分配可能性について述べよ。",
+      "answer_full": "利益は、貨幣的裏付けのある分配可能なものでなければならない。",
+      "keywords": [
+        "貨幣的裏付け",
+        "分配可能"
+      ],
+      "related": [
+        {
+          "id": "d01-01-10",
+          "type": "対比",
+          "note": "もう一方の特質"
+        }
+      ],
+      "pair_group": "利益特質の二説"
+    },
+    {
+      "id": "d01-01-10",
+      "section": "1.財務会計",
+      "topic": "利益の特質(業績指標性)",
+      "importance": "A",
+      "question": "利益の特質である業績指標性について述べよ。",
+      "answer_full": "利益は、企業の業績の指標となるものでなければならない。",
+      "keywords": [
+        "業績の指標"
+      ],
+      "related": [
+        {
+          "id": "d01-01-09",
+          "type": "対比",
+          "note": "もう一方の特質"
+        },
+        {
+          "id": "d01-01-11",
+          "type": "派生",
+          "note": "業績の定義"
+        }
+      ],
+      "pair_group": "利益特質の二説"
+    },
+    {
+      "id": "d01-01-11",
+      "section": "1.財務会計",
+      "topic": "企業の業績とは",
+      "importance": "B",
+      "question": "企業の業績とは何か。",
+      "answer_full": "成果たる収益と努力たる費用の差額としての純成果たる利益が、企業における業績の最終値となる。",
+      "keywords": [
+        "成果",
+        "努力",
+        "純成果"
+      ],
+      "related": [
+        {
+          "id": "d01-01-10",
+          "type": "派生",
+          "note": "業績指標性の前提"
+        }
+      ],
+      "pair_group": null
+    },
+    {
+      "id": "d01-01-12",
+      "section": "1.財務会計",
+      "topic": "利益が業績の指標となるためには",
+      "importance": "B",
+      "question": "利益が企業の業績の指標となるために財務会計が行うべき計算を何と呼ぶか。",
+      "answer_full": "利益が経営の純成果を適切に表現するために財務会計が行うべき計算を「適正な期間損益計算」という。",
+      "keywords": [
+        "適正",
+        "期間損益計算"
+      ],
+      "related": [],
+      "pair_group": null
+    },
+    {
+      "id": "d01-01-13",
+      "section": "1.財務会計",
+      "topic": "分配可能性と業績指標性の両立",
+      "importance": "B",
+      "question": "制度会計における分配可能性と業績指標性の両立について述べよ。",
+      "answer_full": "制度会計においては、利益に対して「分配可能性」を保ちながら、「適正な期間損益計算」を行いたい、というかたちで、分配可能性と業績指標性の両立を目指してきている。",
+      "keywords": [
+        "分配可能",
+        "適正",
+        "期間損益計算"
+      ],
+      "related": [],
+      "pair_group": null
+    },
+    {
+      "id": "d01-02-01",
+      "section": "2.制度会計",
+      "topic": "制度会計の必要性",
+      "importance": "B",
+      "question": "制度会計が必要とされる理由を述べよ。",
+      "answer_full": "財務会計は、法の規制を受けることで社会的信用が担保され、企業外部の利害関係者にとっては安心して会計による情報を受け入れることができる。",
+      "keywords": [
+        "社会的信用",
+        "外部",
+        "安心"
+      ],
+      "related": [],
+      "pair_group": null
+    },
+    {
+      "id": "d01-02-02",
+      "section": "2.制度会計",
+      "topic": "制度会計の種類",
+      "importance": "A",
+      "question": "財務会計において重視される制度会計を2つ述べよ。",
+      "answer_full": "財務会計において重視される制度会計は、すべての会社に適用される会社法会計と上場会社等に適用される金融商品取引法会計である。",
+      "keywords": [
+        "会社法",
+        "金融商品取引法"
+      ],
+      "related": [
+        {
+          "id": "d01-02-03",
+          "type": "セット",
+          "note": "制度趣旨とセットで覚える"
+        },
+        {
+          "id": "d01-02-04",
+          "type": "セット",
+          "note": "決算報告書とセットで覚える"
+        },
+        {
+          "id": "d01-02-05",
+          "type": "セット",
+          "note": "表示規則とセットで覚える"
+        }
+      ],
+      "pair_group": "制度会計の対比"
+    },
+    {
+      "id": "d01-02-03",
+      "section": "2.制度会計",
+      "topic": "制度趣旨",
+      "importance": "A",
+      "question": "会社法会計と金融商品取引法会計の制度趣旨をそれぞれ述べよ。",
+      "answer_full": "会社法会計は主として債権者保護を目的としており、金融商品取引法会計は投資家保護を目的としている。",
+      "keywords": [
+        "債権者",
+        "投資家"
+      ],
+      "related": [
+        {
+          "id": "d01-02-02",
+          "type": "セット",
+          "note": "制度会計の種類とセット"
+        },
+        {
+          "id": "d01-02-04",
+          "type": "セット",
+          "note": "決算報告書とセット"
+        },
+        {
+          "id": "d01-02-05",
+          "type": "セット",
+          "note": "表示規則とセット"
+        }
+      ],
+      "pair_group": "制度会計の対比"
+    },
+    {
+      "id": "d01-02-04",
+      "section": "2.制度会計",
+      "topic": "決算報告書",
+      "importance": "A",
+      "question": "会社法会計と金融商品取引法会計における決算報告書の総称を述べよ。",
+      "answer_full": "決算報告書の総称は、会社法会計においては「計算書類」であり、金融商品取引法会計においては「財務諸表」である。",
+      "keywords": [
+        "計算書類",
+        "財務諸表"
+      ],
+      "related": [
+        {
+          "id": "d01-02-02",
+          "type": "セット",
+          "note": "制度会計の種類とセット"
+        },
+        {
+          "id": "d01-02-03",
+          "type": "セット",
+          "note": "制度趣旨とセット"
+        },
+        {
+          "id": "d01-02-05",
+          "type": "セット",
+          "note": "表示規則とセット"
+        }
+      ],
+      "pair_group": "制度会計の対比"
+    },
+    {
+      "id": "d01-02-05",
+      "section": "2.制度会計",
+      "topic": "表示規則",
+      "importance": "A",
+      "question": "会社法会計と金融商品取引法会計における表示規則を述べよ。",
+      "answer_full": "決算報告書に関する表示規則として、会社法会計において準拠するのが「会社計算規則」であり、金融商品取引法会計において準拠するのが「財務諸表等規則」である。",
+      "keywords": [
+        "会社計算規則",
+        "財務諸表等規則"
+      ],
+      "related": [
+        {
+          "id": "d01-02-02",
+          "type": "セット",
+          "note": "制度会計の種類とセット"
+        },
+        {
+          "id": "d01-02-03",
+          "type": "セット",
+          "note": "制度趣旨とセット"
+        },
+        {
+          "id": "d01-02-04",
+          "type": "セット",
+          "note": "決算報告書とセット"
+        }
+      ],
+      "pair_group": "制度会計の対比"
+    },
+    {
+      "id": "d01-02-06",
+      "section": "2.制度会計",
+      "topic": "会計処理の委任",
+      "importance": "B",
+      "question": "会社法・金融商品取引法における会計処理の取扱いを述べよ。",
+      "answer_full": "具体的な会計処理については法律で定められているわけではなく、会社法も金融商品取引法も、会計処理については、一般に公正妥当と認められる企業会計の慣行や基準に委ねている。",
+      "keywords": [
+        "法律",
+        "公正妥当"
+      ],
+      "related": [
+        {
+          "id": "d01-05-02",
+          "type": "派生",
+          "note": "GAAPの定義へ"
+        }
+      ],
+      "pair_group": null
+    },
+    {
+      "id": "d01-03-01",
+      "section": "3.会計公準",
+      "topic": "会計公準の意義",
+      "importance": "A",
+      "question": "会計公準とは何か。",
+      "answer_full": "会計公準とは、会計が行われるための基礎的前提をいう。",
+      "keywords": [
+        "会計",
+        "基礎的前提"
+      ],
+      "related": [
+        {
+          "id": "d01-03-02",
+          "type": "派生",
+          "note": "公準3つを答えられるように"
+        }
+      ],
+      "pair_group": null
+    },
+    {
+      "id": "d01-03-02",
+      "section": "3.会計公準",
+      "topic": "会計公準3つ",
+      "importance": "A",
+      "question": "会計公準を3つ挙げよ。",
+      "answer_full": "会計公準を3つ挙げれば、企業実体の公準、継続企業の公準、貨幣的評価の公準である。",
+      "keywords": [
+        "企業実体",
+        "継続企業",
+        "貨幣的評価"
+      ],
+      "related": [
+        {
+          "id": "d01-03-03",
+          "type": "セット",
+          "note": "企業実体の公準の定義"
+        },
+        {
+          "id": "d01-03-04",
+          "type": "セット",
+          "note": "継続企業の公準の定義"
+        },
+        {
+          "id": "d01-03-06",
+          "type": "セット",
+          "note": "貨幣的評価の公準の定義"
+        }
+      ],
+      "pair_group": "会計公準3点セット"
+    },
+    {
+      "id": "d01-03-03",
+      "section": "3.会計公準",
+      "topic": "企業実体の公準",
+      "importance": "A",
+      "question": "企業実体の公準とは何か。別名も含めて述べよ。",
+      "answer_full": "企業実体の公準とは、企業と出資者を別個のものと捉え、企業自体を会計単位とする前提をいう。企業実体の公準は会計単位の公準ともいう。",
+      "keywords": [
+        "別個のもの",
+        "企業自体を会計単位",
+        "会計単位"
+      ],
+      "related": [
+        {
+          "id": "d01-03-04",
+          "type": "セット",
+          "note": "公準3点セット"
+        },
+        {
+          "id": "d01-03-06",
+          "type": "セット",
+          "note": "公準3点セット"
+        }
+      ],
+      "pair_group": "会計公準3点セット"
+    },
+    {
+      "id": "d01-03-04",
+      "section": "3.会計公準",
+      "topic": "継続企業の公準",
+      "importance": "A",
+      "question": "継続企業の公準とは何か。別名も含めて述べよ。",
+      "answer_full": "継続企業の公準とは、企業は永遠に継続すると仮定し、企業の全存続期間を人為的に一定の会計期間に区切って、期間計算を行う前提をいう。継続企業の公準は会計期間の公準ともいう。",
+      "keywords": [
+        "永遠に継続",
+        "人為的",
+        "区切っ",
+        "期間計算",
+        "会計期間"
+      ],
+      "related": [
+        {
+          "id": "d01-03-03",
+          "type": "セット",
+          "note": "公準3点セット"
+        },
+        {
+          "id": "d01-03-05",
+          "type": "派生",
+          "note": "具体例"
+        },
+        {
+          "id": "d01-03-06",
+          "type": "セット",
+          "note": "公準3点セット"
+        }
+      ],
+      "pair_group": "会計公準3点セット"
+    },
+    {
+      "id": "d01-03-05",
+      "section": "3.会計公準",
+      "topic": "継続企業を前提とした会計処理",
+      "importance": "B",
+      "question": "継続企業を前提とした会計処理の例を挙げよ。",
+      "answer_full": "継続企業を前提とした会計処理の例として、有形固定資産に対して耐用年数を用いて行う減価償却の計算などが挙げられる。",
+      "keywords": [
+        "耐用年数",
+        "減価償却"
+      ],
+      "related": [
+        {
+          "id": "d01-03-04",
+          "type": "派生",
+          "note": "継続企業の公準の具体例"
+        }
+      ],
+      "pair_group": null
+    },
+    {
+      "id": "d01-03-06",
+      "section": "3.会計公準",
+      "topic": "貨幣的評価の公準",
+      "importance": "A",
+      "question": "貨幣的評価の公準とは何か。別名も含めて述べよ。",
+      "answer_full": "貨幣的評価の公準とは、会計行為である記録・測定・報告のすべてを、貨幣額によって行う前提をいう。貨幣的評価の公準は貨幣的測定の公準ともいう。",
+      "keywords": [
+        "会計行為",
+        "貨幣額",
+        "貨幣的測定"
+      ],
+      "related": [
+        {
+          "id": "d01-03-03",
+          "type": "セット",
+          "note": "公準3点セット"
+        },
+        {
+          "id": "d01-03-04",
+          "type": "セット",
+          "note": "公準3点セット"
+        }
+      ],
+      "pair_group": "会計公準3点セット"
+    },
+    {
+      "id": "d01-04-01",
+      "section": "4.会計主体論",
+      "topic": "会計主体論とは",
+      "importance": "B",
+      "question": "会計主体論とは何か。",
+      "answer_full": "会計主体論とは、会計を行う上で、会計上の判断は誰の立場で行えばよいのかという考え方のことである。",
+      "keywords": [
+        "判断",
+        "誰の立場"
+      ],
+      "related": [
+        {
+          "id": "d01-04-02",
+          "type": "派生",
+          "note": "2つの主体論へ"
+        }
+      ],
+      "pair_group": null
+    },
+    {
+      "id": "d01-04-02",
+      "section": "4.会計主体論",
+      "topic": "会計主体論2つ",
+      "importance": "A",
+      "question": "会計主体論を2つに大別せよ。",
+      "answer_full": "会計主体論を2つに大別すれば、1つが資本主理論、もう1つが企業主体理論である。",
+      "keywords": [
+        "資本主",
+        "企業主体"
+      ],
+      "related": [
+        {
+          "id": "d01-04-03",
+          "type": "セット",
+          "note": "資本主理論の意義"
+        },
+        {
+          "id": "d01-04-04",
+          "type": "セット",
+          "note": "企業主体理論の意義"
+        }
+      ],
+      "pair_group": "会計主体論の対比"
+    },
+    {
+      "id": "d01-04-03",
+      "section": "4.会計主体論",
+      "topic": "資本主理論の意義",
+      "importance": "A",
+      "question": "資本主理論の意義を述べよ。",
+      "answer_full": "資本主理論とは、企業は出資者の所有物であると考えて、出資者の立場から会計上の判断を行うべきであるとする考え方である。",
+      "keywords": [
+        "出資者の所有物",
+        "出資者",
+        "判断"
+      ],
+      "related": [
+        {
+          "id": "d01-04-04",
+          "type": "対比",
+          "note": "もう一方の会計主体論"
+        },
+        {
+          "id": "d01-04-05",
+          "type": "セット",
+          "note": "財産の帰属"
+        },
+        {
+          "id": "d01-04-06",
+          "type": "セット",
+          "note": "適合する企業"
+        }
+      ],
+      "pair_group": "会計主体論の対比"
+    },
+    {
+      "id": "d01-04-04",
+      "section": "4.会計主体論",
+      "topic": "企業主体理論の意義",
+      "importance": "A",
+      "question": "企業主体理論の意義を述べよ。",
+      "answer_full": "企業主体理論とは、企業は出資者とは別個の独立した存在であると考えて、企業自体の立場から会計上の判断を行うべきであるとする考え方である。",
+      "keywords": [
+        "出資者とは別個の独立した存在",
+        "企業自体",
+        "判断"
+      ],
+      "related": [
+        {
+          "id": "d01-04-03",
+          "type": "対比",
+          "note": "もう一方の会計主体論"
+        },
+        {
+          "id": "d01-04-05",
+          "type": "セット",
+          "note": "財産の帰属"
+        },
+        {
+          "id": "d01-04-06",
+          "type": "セット",
+          "note": "適合する企業"
+        }
+      ],
+      "pair_group": "会計主体論の対比"
+    },
+    {
+      "id": "d01-04-05",
+      "section": "4.会計主体論",
+      "topic": "財産の帰属",
+      "importance": "B",
+      "question": "資本主理論と企業主体理論における資産・負債・利益の帰属を述べよ。",
+      "answer_full": "企業の資産・負債は、資本主理論によれば出資者の資産・負債となり、企業主体理論によれば、企業自体の資産・負債となる。また、企業が獲得した利益は、資本主理論によれば出資者に帰属することとなり、企業主体理論によれば企業自体に帰属することとなる。",
+      "keywords": [
+        "出資者",
+        "企業自体"
+      ],
+      "related": [
+        {
+          "id": "d01-04-03",
+          "type": "セット",
+          "note": "資本主理論"
+        },
+        {
+          "id": "d01-04-04",
+          "type": "セット",
+          "note": "企業主体理論"
+        }
+      ],
+      "pair_group": "会計主体論の対比"
+    },
+    {
+      "id": "d01-04-06",
+      "section": "4.会計主体論",
+      "topic": "適合する企業",
+      "importance": "B",
+      "question": "資本主理論と企業主体理論がそれぞれ適合する企業を述べよ。",
+      "answer_full": "資本主理論が適合する企業は個人企業であり、企業主体理論が適合する企業は株式会社である。",
+      "keywords": [
+        "個人企業",
+        "株式会社"
+      ],
+      "related": [
+        {
+          "id": "d01-04-03",
+          "type": "セット",
+          "note": "資本主理論"
+        },
+        {
+          "id": "d01-04-04",
+          "type": "セット",
+          "note": "企業主体理論"
+        }
+      ],
+      "pair_group": "会計主体論の対比"
+    },
+    {
+      "id": "d01-05-01",
+      "section": "5.GAAP",
+      "topic": "GAAPの訳語",
+      "importance": "B",
+      "question": "GAAPの日本語訳を述べよ。",
+      "answer_full": "GAAPを日本では「一般に公正妥当と認められる企業会計の基準」と訳している。",
+      "keywords": [
+        "一般に公正妥当"
+      ],
+      "related": [
+        {
+          "id": "d01-05-02",
+          "type": "派生",
+          "note": "定義の詳細"
+        }
+      ],
+      "pair_group": null
+    },
+    {
+      "id": "d01-05-02",
+      "section": "5.GAAP",
+      "topic": "GAAPとは",
+      "importance": "A",
+      "question": "一般に公正妥当と認められる企業会計の基準とは何か。",
+      "answer_full": "一般に公正妥当と認められる企業会計の基準とは、会計実務の中に慣習として発達したもののうち、一般に公正妥当と認められた会計慣行を、一定の権威ある機関が整理して設定したものをいう。",
+      "keywords": [
+        "会計実務",
+        "慣習",
+        "一般に公正妥当",
+        "会計慣行"
+      ],
+      "related": [
+        {
+          "id": "d01-02-06",
+          "type": "派生",
+          "note": "会計処理の委任から"
+        },
+        {
+          "id": "d01-05-03",
+          "type": "セット",
+          "note": "必要性とセット"
+        }
+      ],
+      "pair_group": null
+    },
+    {
+      "id": "d01-05-03",
+      "section": "5.GAAP",
+      "topic": "GAAPの必要性",
+      "importance": "B",
+      "question": "GAAPはなぜ必要とされるか。",
+      "answer_full": "GAAPは、会計情報の信頼性確保のために必要とされる。",
+      "keywords": [
+        "信頼性確保"
+      ],
+      "related": [
+        {
+          "id": "d01-05-02",
+          "type": "セット",
+          "note": "定義とセット"
+        }
+      ],
+      "pair_group": null
+    }
+  ]
+};
+
+// ====================
+// データ読込
+// ====================
+// 動作モード：
+//  ① manifest.json があれば外部JSONファイル群を読込（GitHub Pages 等）
+//  ② manifestが取れない（file://直開きなど）場合は内蔵EMBEDDED_DATAで起動
+// 同梱の EMBEDDED_DATA は「ファースト起動用のサンプル」兼「オフライン用フォールバック」
+async function loadCards() {
+  let units = [];
+
+  // 既にロード済みの単元IDを記録（重複防止）
+  const seen = new Set();
+
+  try {
+    const res = await fetch('data/manifest.json', {cache: 'no-cache'});
+    if (res.ok) {
+      const manifest = await res.json();
+      // manifest = { units: ["dento-01.json", "dento-02.json", ...] }
+      for (const file of (manifest.units || [])) {
+        try {
+          const u = await fetch('data/' + file, {cache: 'no-cache'});
+          if (u.ok) {
+            const data = await u.json();
+            if (!seen.has(data.unit_id)) {
+              units.push(data);
+              seen.add(data.unit_id);
+            }
+          }
+        } catch (e) {
+          console.warn('単元読込失敗:', file, e);
+        }
+      }
+    }
+  } catch (e) {
+    // fetch自体できない（file://直開き等）
+  }
+
+  // 外部から1つも読めなかった場合は内蔵データを使う
+  if (units.length === 0 && typeof EMBEDDED_DATA !== 'undefined') {
+    units = [EMBEDDED_DATA];
+  }
+
+  // フラット化
+  ALL_CARDS = [];
+  CARD_BY_ID = {};
+  UNITS = units;
+  units.forEach(unit => {
+    (unit.cards || []).forEach(c => {
+      const card = {...c, unit_id: unit.unit_id, unit_name: unit.unit_name, category: unit.category};
+      ALL_CARDS.push(card);
+      CARD_BY_ID[c.id] = card;
+    });
+  });
+}
+
+let UNITS = [];
+
+// ========== 学習履歴(SRS) ==========
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch(e) { return {}; }
+}
+function saveState(s) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch(e) {}
+}
+let STATE = loadState();
+// state[cardId] = { ease, interval, due, reps, lastReview, correct, total }
+
+function getCardState(id) {
+  return STATE[id] || { ease: 2.3, interval: 0, due: 0, reps: 0, lastReview: 0, correct: 0, total: 0 };
+}
+
+// SM-2簡易版: q=0(忘れた) 1(微妙) 2(完璧)
+function updateSRS(id, q) {
+  const cs = {...getCardState(id)};
+  cs.total++;
+  if (q >= 1) cs.correct++;
+  const now = Date.now();
+  cs.lastReview = now;
+  if (q === 0) {
+    cs.reps = 0;
+    cs.interval = 1;
+    cs.ease = Math.max(1.3, cs.ease - 0.2);
+  } else if (q === 1) {
+    cs.reps++;
+    cs.interval = cs.reps === 1 ? 1 : Math.round(cs.interval * 1.4);
+    cs.ease = Math.max(1.3, cs.ease - 0.05);
+  } else {
+    cs.reps++;
+    if (cs.reps === 1) cs.interval = 1;
+    else if (cs.reps === 2) cs.interval = 3;
+    else cs.interval = Math.round(cs.interval * cs.ease);
+    cs.ease = Math.min(2.8, cs.ease + 0.1);
+  }
+  cs.due = now + cs.interval * 86400000;
+  STATE[id] = cs;
+  saveState(STATE);
+}
+
+// ========== 設定 ==========
+const SETTINGS_KEY = 'zaihyo-settings-v1';
+let SETTINGS = (() => {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY)) || {}; }
+  catch(e) { return {}; }
+})();
+SETTINGS = {
+  mode: SETTINGS.mode || 'fill',
+  imps: SETTINGS.imps || ['A','B','C'],
+  count: SETTINGS.count == null ? 10 : SETTINGS.count,
+  showRelated: SETTINGS.showRelated !== false
+};
+function saveSettings() {
+  localStorage.setItem(SETTINGS_KEY, JSON.stringify(SETTINGS));
+}
+
+// ========== ビュー切替 ==========
+const views = document.querySelectorAll('.view');
+const tabs = document.querySelectorAll('.tab');
+function showView(v) {
+  views.forEach(x => x.classList.remove('active'));
+  tabs.forEach(x => x.classList.remove('active'));
+  document.getElementById('view-' + v).classList.add('active');
+  document.querySelector(`.tab[data-view="${v}"]`).classList.add('active');
+  if (v === 'dash') renderDash();
+  if (v === 'pairs') renderPairs();
+  if (v === 'map') renderMap();
+  if (v === 'settings') renderSettings();
+  window.scrollTo(0, 0);
+}
+tabs.forEach(t => t.addEventListener('click', () => showView(t.dataset.view)));
+
+// ========== ダッシュボード ==========
+function getDefRate(card) {
+  const cs = getCardState(card.id);
+  if (cs.total === 0) return null;
+  return cs.correct / cs.total;
+}
+function getDefBucket(card) {
+  const r = getDefRate(card);
+  if (r === null) return 'new';
+  if (r >= 0.8) return 'high';
+  if (r >= 0.5) return 'mid';
+  return 'low';
+}
+
+function renderDash() {
+  document.getElementById('dateLabel').textContent =
+    new Date().toLocaleDateString('ja-JP', {month: 'long', day: 'numeric', weekday: 'short'});
+
+  const hour = new Date().getHours();
+  const greet =
+    hour < 5 ? '夜更けの一頁' :
+    hour < 11 ? 'おはようございます' :
+    hour < 17 ? 'お疲れさまです' :
+    hour < 22 ? '今日も一歩' : '夜のひと時に';
+  document.getElementById('greeting').textContent = greet;
+
+  document.getElementById('statTotal').textContent = ALL_CARDS.length;
+  const aCards = ALL_CARDS.filter(c => getImportance(c) === 'A');
+  const aLearned = aCards.filter(c => getDefBucket(c) === 'high').length;
+  const aRate = aCards.length ? Math.round(aLearned / aCards.length * 100) : 0;
+  document.getElementById('statARate').innerHTML = aRate + '<span class="stat-unit">%</span>';
+  const now = Date.now();
+  const due = ALL_CARDS.filter(c => {
+    const cs = getCardState(c.id);
+    return cs.total > 0 && cs.due <= now;
+  }).length;
+  document.getElementById('statDue').textContent = due;
+  const nw = ALL_CARDS.filter(c => getCardState(c.id).total === 0).length;
+  document.getElementById('statNew').textContent = nw;
+
+  // マトリクス
+  const matrix = document.getElementById('matrix');
+  const imps = ['A','B','C'];
+  const buckets = ['new', 'low', 'mid', 'high'];
+  const bucketLabels = {new: '未学習', low: '苦手', mid: '途上', high: '定着'};
+  let html = '<div class="matrix-cell header"></div>';
+  buckets.forEach(b => html += `<div class="matrix-cell header">${bucketLabels[b]}</div>`);
+  imps.forEach(imp => {
+    const cls = imp === 'A' ? 'priority' : '';
+    html += `<div class="matrix-cell row-label ${cls}">${imp}</div>`;
+    buckets.forEach(b => {
+      const count = ALL_CARDS.filter(c => getImportance(c) === imp && getDefBucket(c) === b).length;
+      const isWarn = imp === 'A' && (b === 'new' || b === 'low') && count > 0;
+      html += `<div class="matrix-cell ${cls}" style="${isWarn ? 'color: var(--imp-a); font-weight: 600;' : ''}"><span class="num">${count}</span></div>`;
+    });
+  });
+  matrix.innerHTML = html;
+
+  // 単元一覧
+  const unitsEl = document.getElementById('unitsSection');
+  if (unitsEl && UNITS.length > 0) {
+    const unitHtml = UNITS.map(u => {
+      const unitCards = ALL_CARDS.filter(c => c.unit_id === u.unit_id);
+      const learned = unitCards.filter(c => getDefBucket(c) === 'high').length;
+      const pct = unitCards.length ? Math.round(learned / unitCards.length * 100) : 0;
+      return `<button class="unit-row" data-uid="${escapeHtml(u.unit_id)}">
+        <div class="unit-info">
+          <div class="unit-name">${escapeHtml(u.unit_name)}</div>
+          <div class="unit-meta">${unitCards.length}枚 · 定着 ${pct}%</div>
+        </div>
+        <div class="unit-progress">
+          <div class="unit-progress-bar"><div class="unit-progress-fill" style="width:${pct}%"></div></div>
+        </div>
+      </button>`;
+    }).join('');
+    unitsEl.innerHTML = `
+      <div class="units-title">収録単元（${UNITS.length}単元 · ${ALL_CARDS.length}枚）</div>
+      <div class="units-list">${unitHtml}</div>
+    `;
+    unitsEl.querySelectorAll('.unit-row').forEach(r => {
+      r.addEventListener('click', () => {
+        const uid = r.dataset.uid;
+        const cards = ALL_CARDS.filter(c => c.unit_id === uid);
+        if (cards.length) startSession(cards);
+      });
+    });
+  }
+}
+
+document.getElementById('btnStartDue').addEventListener('click', () => {
+  const now = Date.now();
+  const list = ALL_CARDS.filter(c => {
+    const cs = getCardState(c.id);
+    return cs.total > 0 && cs.due <= now;
+  });
+  if (list.length === 0) {
+    // 未着手から始める
+    startSession(ALL_CARDS.filter(c => getCardState(c.id).total === 0).slice(0, SETTINGS.count || 10));
+  } else {
+    startSession(list);
+  }
+});
+document.getElementById('btnStartA').addEventListener('click', () => {
+  startSession(ALL_CARDS.filter(c => getImportance(c) === 'A'));
+});
+document.getElementById('btnStartAll').addEventListener('click', () => {
+  startSession([...ALL_CARDS]);
+});
+
+// ========== 学習セッション ==========
+let session = null;
+
+function startSession(cards, opts={}) {
+  // フィルタ
+  let pool = cards.filter(c => SETTINGS.imps.includes(getImportance(c)));
+  // シャッフル
+  pool = shuffle(pool);
+  if (SETTINGS.count > 0) pool = pool.slice(0, SETTINGS.count);
+  if (pool.length === 0) {
+    alert('該当するカードがありません。設定の重要度フィルタを確認してください。');
+    return;
+  }
+  session = {
+    queue: pool, idx: 0, total: pool.length,
+    correct: 0, partial: 0, wrong: 0,
+    pairMode: opts.pairMode || false
+  };
+  showView('study');
+  renderStudy();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderStudy() {
+  const root = document.getElementById('studyContent');
+  if (!session || session.idx >= session.queue.length) {
+    renderComplete();
+    return;
+  }
+  const card = session.queue[session.idx];
+  const cs = getCardState(card.id);
+  const pct = Math.round((session.idx / session.total) * 100);
+
+  let html = `
+    <div class="study-header">
+      <span>${session.idx + 1} / ${session.total}</span>
+      <span>${SETTINGS.mode === 'fill' ? '穴埋めモード' : '記述モード'}</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width: ${pct}%"></div></div>
+    <div class="card">
+      <div class="card-meta">
+        <span class="imp-current">重要度</span>
+        <div class="imp-switcher" data-cid="${card.id}">
+          ${['A','B','C'].map(imp => `<button class="imp-btn imp-${imp} ${getImportance(card) === imp ? 'active' : ''}" data-imp="${imp}">${imp}</button>`).join('')}
+        </div>
+        ${IMP_OVERRIDE[card.id] ? '<span class="imp-edited-mark" title="自分で変更したカード">●</span>' : ''}
+        <span class="section-tag">${card.section}</span>
+        ${cs.total > 0 ? `<span class="section-tag">·  正答率 ${Math.round(cs.correct/cs.total*100)}%</span>` : '<span class="section-tag">·  初回</span>'}
+      </div>
+      <div class="card-topic">${escapeHtml(card.topic)}</div>
+      <div class="card-question">${escapeHtml(card.question)}</div>
+      <div class="answer-area" id="answerArea"></div>
+    </div>
+  `;
+  root.innerHTML = html;
+
+  // 重要度切替ボタンのイベント
+  const switcher = root.querySelector('.imp-switcher');
+  if (switcher) {
+    switcher.querySelectorAll('.imp-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const imp = btn.dataset.imp;
+        setImportance(card.id, imp);
+        // ボタンのactive状態を更新
+        switcher.querySelectorAll('.imp-btn').forEach(b => b.classList.toggle('active', b.dataset.imp === imp));
+        // 編集マークの追加/削除
+        const meta = switcher.parentElement;
+        const existingMark = meta.querySelector('.imp-edited-mark');
+        if (IMP_OVERRIDE[card.id]) {
+          if (!existingMark) {
+            const mark = document.createElement('span');
+            mark.className = 'imp-edited-mark';
+            mark.title = '自分で変更したカード';
+            mark.textContent = '●';
+            switcher.insertAdjacentElement('afterend', mark);
+          }
+        } else if (existingMark) {
+          existingMark.remove();
+        }
+      });
+    });
+  }
+
+  if (SETTINGS.mode === 'fill') renderFill(card);
+  else renderWrite(card);
+}
+
+function renderFill(card) {
+  const area = document.getElementById('answerArea');
+  // 答え文にキーワードを空欄化
+  let masked = card.answer_full;
+  const keywords = [...card.keywords].sort((a, b) => b.length - a.length);
+  keywords.forEach((kw, i) => {
+    const re = new RegExp(escapeReg(kw), 'g');
+    masked = masked.replace(re, `__BLANK_${i}_${kw.length}__`);
+  });
+  // BLANKをspanに
+  masked = escapeHtml(masked);
+  masked = masked.replace(/__BLANK_(\d+)_(\d+)__/g, (m, i, len) => {
+    const minW = Math.max(40, parseInt(len) * 14);
+    return `<span class="blank" data-i="${i}" role="button" tabindex="0" aria-label="タップで答えを表示" style="min-width: ${minW}px;">${'　'.repeat(parseInt(len))}</span>`;
+  });
+
+  area.innerHTML = `
+    <div class="fill-text">${masked}</div>
+    <div class="fill-hint" id="fillHint">空欄をタップして答えを確認</div>
+    <div class="action-row">
+      <button class="act" id="actRevealAll">すべて表示</button>
+      <button class="act primary" id="actNext">採点へ</button>
+    </div>
+    <div id="ratingArea" style="display:none;"></div>
+  `;
+
+  // 各空欄を個別にタップで表示
+  const blanks = document.querySelectorAll('.blank');
+  const revealOne = (b) => {
+    if (b.classList.contains('revealed')) return;
+    const kwIdx = parseInt(b.dataset.i);
+    b.textContent = keywords[kwIdx];
+    b.classList.add('revealed');
+    updateFillHint();
+  };
+  blanks.forEach(b => {
+    b.addEventListener('click', () => revealOne(b));
+    b.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        revealOne(b);
+      }
+    });
+  });
+
+  const updateFillHint = () => {
+    const total = blanks.length;
+    const opened = document.querySelectorAll('.blank.revealed').length;
+    const hint = document.getElementById('fillHint');
+    if (!hint) return;
+    if (opened === 0) {
+      hint.textContent = '空欄をタップして答えを確認';
+    } else if (opened < total) {
+      hint.textContent = `${opened} / ${total} 表示中`;
+    } else {
+      hint.textContent = 'すべての空欄を確認しました';
+    }
+    const btn = document.getElementById('actRevealAll');
+    if (btn) btn.textContent = opened === total ? 'すべて隠す' : 'すべて表示';
+  };
+
+  document.getElementById('actRevealAll').addEventListener('click', () => {
+    const allOpen = document.querySelectorAll('.blank.revealed').length === blanks.length;
+    blanks.forEach(b => {
+      if (allOpen) {
+        // 全部閉じる
+        const len = b.textContent.length;
+        b.textContent = '　'.repeat(len);
+        b.classList.remove('revealed');
+      } else {
+        revealOne(b);
+      }
+    });
+    updateFillHint();
+  });
+
+  document.getElementById('actNext').addEventListener('click', () => {
+    // 未表示の空欄があれば全部開いてから採点へ
+    blanks.forEach(b => revealOne(b));
+    showRating(card);
+  });
+}
+
+function renderWrite(card) {
+  const area = document.getElementById('answerArea');
+  area.innerHTML = `
+    <textarea class="write-input" id="writeInput" placeholder="ここに答えを入力..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" inputmode="text" data-gramm="false" data-1p-ignore data-lpignore="true"></textarea>
+    <div class="action-row">
+      <button class="act" id="actSkip">わからない</button>
+      <button class="act primary" id="actCheck">採点する</button>
+    </div>
+    <div id="ratingArea"></div>
+  `;
+
+  document.getElementById('actSkip').addEventListener('click', () => {
+    showWriteResult(card, '');
+  });
+  document.getElementById('actCheck').addEventListener('click', () => {
+    const v = document.getElementById('writeInput').value;
+    showWriteResult(card, v);
+  });
+}
+
+function showWriteResult(card, userText) {
+  const area = document.getElementById('ratingArea');
+
+  // 各キーワードの「模範解答での出現位置」と「入力での出現位置」を取得
+  const kwInfo = card.keywords.map(kw => {
+    const expectedPos = card.answer_full.indexOf(kw);
+    const userPos = userText.indexOf(kw);
+    return {
+      kw,
+      expectedPos,
+      userPos,
+      hit: userPos >= 0
+    };
+  });
+
+  const hits = kwInfo.filter(k => k.hit);
+  const misses = kwInfo.filter(k => !k.hit);
+
+  // 語順チェック：模範解答での順序通りに、入力でも左→右へと並んでいるか
+  // (含まれているキーワードだけで判定。欠けているキーワードは順序判定から除外)
+  const expectedOrder = [...kwInfo]
+    .filter(k => k.hit)
+    .sort((a, b) => a.expectedPos - b.expectedPos);
+  let orderOK = true;
+  let prevUserPos = -1;
+  for (const k of expectedOrder) {
+    if (k.userPos < prevUserPos) {
+      orderOK = false;
+      break;
+    }
+    prevUserPos = k.userPos;
+  }
+
+  // 総合判定
+  const hitCount = hits.length;
+  const total = card.keywords.length;
+  const matchRate = total ? hitCount / total : 0;
+  let verdict, verdictColor, verdictDetail;
+  if (hitCount === total && orderOK) {
+    verdict = '完全一致';
+    verdictColor = 'good';
+    verdictDetail = '全キーワードが模範解答どおりの順序で揃っています';
+  } else if (hitCount === total && !orderOK) {
+    verdict = '順序違い';
+    verdictColor = 'mid';
+    verdictDetail = 'キーワードは全部入っていますが、模範解答と順序が異なります';
+  } else if (hitCount > 0 && orderOK) {
+    verdict = '部分一致';
+    verdictColor = 'mid';
+    verdictDetail = `${total - hitCount}個のキーワードが不足しています（含まれている分の順序は◯）`;
+  } else if (hitCount > 0 && !orderOK) {
+    verdict = '不足＋順序違い';
+    verdictColor = 'bad';
+    verdictDetail = `キーワード不足かつ順序も異なります`;
+  } else {
+    verdict = '不足';
+    verdictColor = 'bad';
+    verdictDetail = 'キーワードがほとんど含まれていません';
+  }
+
+  // 入力欄を読み取り専用に
+  const inp = document.getElementById('writeInput');
+  if (inp) inp.readOnly = true;
+
+  // 採点ボタン群を非表示
+  const actRow = area.parentElement.querySelector('.action-row');
+  if (actRow) actRow.style.display = 'none';
+
+  // キーワードチップを「模範解答での出現順」で並べる（覚える順を可視化）
+  const orderedKw = [...kwInfo].sort((a, b) => a.expectedPos - b.expectedPos);
+  const kwChips = orderedKw.map((k, i) => {
+    if (k.hit) {
+      // 入力上の出現順位を計算（含まれているもののみで何番目か）
+      const hitsByExpected = orderedKw.filter(x => x.hit);
+      const expectedIdx = hitsByExpected.findIndex(x => x.kw === k.kw);
+      const userOrderArr = [...hitsByExpected].sort((a, b) => a.userPos - b.userPos);
+      const userIdx = userOrderArr.findIndex(x => x.kw === k.kw);
+      const orderMismatch = expectedIdx !== userIdx;
+      const cls = orderMismatch ? 'hit-disorder' : 'hit';
+      const badge = orderMismatch ? `<span class="kw-pos">入力 ${userIdx + 1}番目 / 正解 ${expectedIdx + 1}番目</span>` : '';
+      return `<span class="kw-match ${cls}">${escapeHtml(k.kw)}${badge}</span>`;
+    } else {
+      return `<span class="kw-match miss">${escapeHtml(k.kw)}</span>`;
+    }
+  }).join('');
+
+  // 段階1：キーワード結果のみ表示
+  area.innerHTML = `
+    <div class="write-result">
+      <div class="verdict-row">
+        <span class="verdict-badge ${verdictColor}">${verdict}</span>
+        <span class="verdict-count">${hitCount} / ${total} 個</span>
+      </div>
+      <div class="verdict-detail">${verdictDetail}</div>
+      <div class="kw-row-label">キーワード（模範解答での出現順）</div>
+      <div class="kw-row">${kwChips}</div>
+    </div>
+    <div class="action-row" id="revealAnswerRow">
+      <button class="act primary" id="actRevealAnswer" style="grid-column: 1 / -1;">模範解答を表示</button>
+    </div>
+  `;
+
+  document.getElementById('actRevealAnswer').addEventListener('click', () => {
+    // 段階2：模範解答を追加表示
+    const revealRow = document.getElementById('revealAnswerRow');
+    if (revealRow) revealRow.remove();
+
+    // 模範解答中のキーワードをハイライト
+    let highlighted = escapeHtml(card.answer_full);
+    // 長い順に置換してかぶりを防ぐ
+    const sortedKws = [...card.keywords].sort((a, b) => b.length - a.length);
+    sortedKws.forEach(kw => {
+      const escKw = escapeHtml(kw);
+      const hit = kwInfo.find(k => k.kw === kw)?.hit;
+      const cls = hit ? 'ans-hl hit' : 'ans-hl miss';
+      const re = new RegExp(escapeReg(escKw), 'g');
+      highlighted = highlighted.replace(re, `<span class="${cls}">${escKw}</span>`);
+    });
+
+    const answerBox = document.createElement('div');
+    answerBox.className = 'write-result answer-reveal';
+    answerBox.style.borderLeft = '3px solid var(--gold)';
+    answerBox.style.borderRadius = '0 4px 4px 0';
+    answerBox.innerHTML = `
+      <div class="label">模範解答（黄=書けた / 赤=書けなかった）</div>
+      <div class="answer-text">${highlighted}</div>
+    `;
+    area.appendChild(answerBox);
+
+    // 段階3：評価ボタンを表示
+    showRating(card, matchRate);
+  });
+}
+
+function showRating(card, autoMatchRate=null) {
+  // 関連カード表示
+  if (SETTINGS.showRelated && card.related && card.related.length > 0) {
+    const relHtml = card.related.map(r => {
+      const t = CARD_BY_ID[r.id];
+      if (!t) return '';
+      return `<button class="related-item" data-cid="${r.id}">
+        <span class="related-type">${r.type}</span>${escapeHtml(t.topic)}
+      </button>`;
+    }).join('');
+    const wrapper = document.createElement('div');
+    wrapper.className = 'related-box';
+    wrapper.innerHTML = `<div class="related-box-title">セットで覚える</div>${relHtml}`;
+    document.querySelector('.card').appendChild(wrapper);
+    wrapper.querySelectorAll('.related-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cid = btn.dataset.cid;
+        const target = CARD_BY_ID[cid];
+        if (target && session) {
+          // 関連カードをセッションに挿入
+          session.queue.splice(session.idx + 1, 0, target);
+          session.total++;
+        }
+      });
+    });
+  }
+
+  // 評価ボタン（既存のratingArea内容を残し、ボタンだけ追記）
+  const ratingArea = document.getElementById('ratingArea');
+  if (!ratingArea) return;
+  ratingArea.style.display = 'block';
+  // 既存の評価ボタンがあれば一旦削除（リランダー対策）
+  const existingRating = ratingArea.querySelector('.rating-buttons');
+  if (existingRating) existingRating.remove();
+  const ratingDiv = document.createElement('div');
+  ratingDiv.className = 'rating-buttons';
+  ratingDiv.innerHTML = `
+    <div class="action-row three">
+      <button class="act bad" data-q="0">忘れた</button>
+      <button class="act mid" data-q="1">微妙</button>
+      <button class="act good" data-q="2">完璧</button>
+    </div>
+  `;
+  ratingArea.appendChild(ratingDiv);
+  ratingDiv.querySelectorAll('.act').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const q = parseInt(btn.dataset.q);
+      updateSRS(card.id, q);
+      if (q === 2) session.correct++;
+      else if (q === 1) session.partial++;
+      else session.wrong++;
+      session.idx++;
+      renderStudy();
+    });
+  });
+}
+
+function renderComplete() {
+  const root = document.getElementById('studyContent');
+  if (!session) return;
+  const total = session.correct + session.partial + session.wrong;
+  root.innerHTML = `
+    <div class="complete">
+      <div class="complete-icon">◆</div>
+      <div class="complete-title">セッション完了</div>
+      <div class="dash-sub">${total}問お疲れさまでした</div>
+      <div class="complete-stats">
+        <div><div class="complete-stat-num" style="color: var(--good);">${session.correct}</div><div class="complete-stat-label">完璧</div></div>
+        <div><div class="complete-stat-num" style="color: var(--gold);">${session.partial}</div><div class="complete-stat-label">微妙</div></div>
+        <div><div class="complete-stat-num" style="color: var(--bad);">${session.wrong}</div><div class="complete-stat-label">忘れた</div></div>
+      </div>
+      <button class="start-btn primary-accent" onclick="showView('dash')">ホームに戻る</button>
+      <button class="start-btn secondary" onclick="document.getElementById('btnStartDue').click()">もう一度</button>
+    </div>
+  `;
+  session = null;
+}
+
+// ========== ペアグループ ==========
+function renderPairs() {
+  const root = document.getElementById('pairList');
+  const groups = {};
+  ALL_CARDS.forEach(c => {
+    if (c.pair_group) {
+      if (!groups[c.pair_group]) groups[c.pair_group] = [];
+      groups[c.pair_group].push(c);
+    }
+  });
+  if (Object.keys(groups).length === 0) {
+    root.innerHTML = '<div class="empty"><div class="empty-title">ペアグループなし</div><div>関連付けされたカードがまだありません</div></div>';
+    return;
+  }
+  let html = '';
+  Object.entries(groups).forEach(([name, cards]) => {
+    html += `<div class="pair-card">
+      <div class="pair-card-name">${escapeHtml(name)}</div>
+      <div class="pair-cards-list">
+        ${cards.map(c => `<span class="pair-mini" data-cid="${c.id}">${escapeHtml(c.topic)}</span>`).join('')}
+      </div>
+      <button class="start-btn" style="margin-top: 12px; padding: 10px; font-size: 13px;" data-grp="${escapeHtml(name)}">このセットを連続学習</button>
+    </div>`;
+  });
+  root.innerHTML = html;
+  root.querySelectorAll('.pair-mini').forEach(el => {
+    el.addEventListener('click', () => {
+      const c = CARD_BY_ID[el.dataset.cid];
+      if (c) startSession([c]);
+    });
+  });
+  root.querySelectorAll('button[data-grp]').forEach(el => {
+    el.addEventListener('click', () => {
+      const grp = el.dataset.grp;
+      const cards = ALL_CARDS.filter(c => c.pair_group === grp);
+      startSession(cards, {pairMode: true});
+    });
+  });
+}
+
+// ========== 関連マップ ==========
+function renderMap() {
+  const svg = document.getElementById('mapSvg');
+
+  // セクション別にグループ化
+  const sections = {};
+  ALL_CARDS.forEach(c => {
+    if (!sections[c.section]) sections[c.section] = [];
+    sections[c.section].push(c);
+  });
+  const sectionKeys = Object.keys(sections);
+
+  // レイアウト計算
+  const PANEL_W = 220;
+  const ROW_H = 26;
+  const HEADER_H = 36;
+  const PANEL_PAD = 12;
+  const GAP_X = 60;
+  const GAP_Y = 50;
+
+  // 2列レイアウト：左列・右列に交互に
+  const panels = {};
+  let leftY = 20, rightY = 20;
+  sectionKeys.forEach((sec, i) => {
+    const cards = sections[sec];
+    const h = HEADER_H + cards.length * ROW_H + PANEL_PAD;
+    if (i % 2 === 0) {
+      panels[sec] = {x: 20, y: leftY, w: PANEL_W, h};
+      leftY += h + GAP_Y;
+    } else {
+      panels[sec] = {x: 20 + PANEL_W + GAP_X, y: rightY, w: PANEL_W, h};
+      rightY += h + GAP_Y;
+    }
+  });
+
+  // 各カードの座標（パネル内での位置）
+  const nodePos = {};
+  sectionKeys.forEach(sec => {
+    const p = panels[sec];
+    sections[sec].forEach((c, i) => {
+      nodePos[c.id] = {
+        x: p.x,
+        y: p.y + HEADER_H + i * ROW_H + ROW_H/2,
+        side: (panels[sec].x < PANEL_W) ? 'left' : 'right',
+        panelX: p.x, panelW: p.w
+      };
+    });
+  });
+
+  const totalW = 20 + PANEL_W * 2 + GAP_X + 20;
+  const totalH = Math.max(leftY, rightY) + 20;
+  svg.setAttribute('viewBox', `0 0 ${totalW} ${totalH}`);
+  svg.setAttribute('width', totalW);
+  svg.setAttribute('height', totalH);
+
+  // ===== 線を描く =====
+  // 「対比」と「セット」のみ表示（重要なものに絞る）
+  let edges = '';
+  const drawn = new Set();
+  ALL_CARDS.forEach(c => {
+    (c.related || []).forEach(r => {
+      if (r.type !== '対比' && r.type !== 'セット') return;
+      const key = [c.id, r.id].sort().join('|') + '|' + r.type;
+      if (drawn.has(key)) return;
+      drawn.add(key);
+      const a = nodePos[c.id], b = nodePos[r.id];
+      if (!a || !b) return;
+
+      // 各ノードからパネルの端へ伸ばす
+      const aEdgeX = a.x + (a.x < b.x ? a.panelW : 0);
+      const bEdgeX = b.x + (b.x < a.x ? b.panelW : 0);
+      const color = r.type === '対比' ? 'var(--accent)' : 'var(--gold)';
+      const opacity = r.type === '対比' ? 0.55 : 0.4;
+
+      // ベジェ曲線で滑らかに繋ぐ
+      const dx = Math.abs(bEdgeX - aEdgeX);
+      const ctrl = Math.min(80, dx / 2);
+      const path = `M ${aEdgeX} ${a.y} C ${aEdgeX + (a.x < b.x ? ctrl : -ctrl)} ${a.y}, ${bEdgeX + (b.x < a.x ? ctrl : -ctrl)} ${b.y}, ${bEdgeX} ${b.y}`;
+      edges += `<path d="${path}" fill="none" stroke="${color}" stroke-width="1.3" opacity="${opacity}" data-rel="${r.type}"/>`;
+    });
+  });
+
+  // ===== パネルを描く =====
+  let panelHtml = '';
+  sectionKeys.forEach(sec => {
+    const p = panels[sec];
+    panelHtml += `<g>
+      <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="4"
+            fill="var(--bg-soft)" stroke="var(--line)" stroke-width="1"/>
+      <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${HEADER_H}" rx="4"
+            fill="var(--bg)" stroke="none"/>
+      <line x1="${p.x}" y1="${p.y + HEADER_H}" x2="${p.x + p.w}" y2="${p.y + HEADER_H}"
+            stroke="var(--line)" stroke-width="0.5"/>
+      <text x="${p.x + 14}" y="${p.y + HEADER_H/2 + 5}" font-size="13"
+            font-family="Noto Sans JP, sans-serif" font-weight="600" fill="var(--ink)">${escapeHtml(sec)}</text>
+    </g>`;
+  });
+
+  // ===== ノード（カード名）を描く =====
+  let nodes = '';
+  ALL_CARDS.forEach(c => {
+    const p = nodePos[c.id];
+    if (!p) return;
+    const colors = {A: 'var(--imp-a)', B: 'var(--imp-b)', C: 'var(--imp-c)'};
+    const dotColor = colors[getImportance(c)];
+
+    // 関連の有無で文字色を変える
+    const hasRel = (c.related || []).some(r => r.type === '対比' || r.type === 'セット');
+    const textColor = hasRel ? 'var(--ink)' : 'var(--ink-mute)';
+    const fontWeight = hasRel ? '500' : '400';
+
+    nodes += `<g style="cursor: pointer;" data-cid="${c.id}" class="map-node">
+      <rect x="${p.x + 2}" y="${p.y - ROW_H/2 + 1}" width="${p.panelW - 4}" height="${ROW_H - 2}"
+            fill="transparent" rx="2"/>
+      <circle cx="${p.x + 12}" cy="${p.y}" r="4" fill="${dotColor}"/>
+      <text x="${p.x + 24}" y="${p.y + 4}" font-size="12" fill="${textColor}" font-weight="${fontWeight}">${escapeHtml(truncate(c.topic, 22))}</text>
+      <title>${escapeHtml(c.topic)} (重要度${getImportance(c)})</title>
+    </g>`;
+  });
+
+  svg.innerHTML = panelHtml + edges + nodes;
+
+  svg.querySelectorAll('.map-node').forEach(g => {
+    g.addEventListener('mouseenter', () => highlightConnections(g.dataset.cid, true));
+    g.addEventListener('mouseleave', () => highlightConnections(g.dataset.cid, false));
+    g.addEventListener('click', () => {
+      const c = CARD_BY_ID[g.dataset.cid];
+      if (c) startSession([c]);
+    });
+  });
+}
+
+function truncate(s, n) {
+  if (s.length <= n) return s;
+  return s.slice(0, n - 1) + '…';
+}
+
+function highlightConnections(cid, on) {
+  const svg = document.getElementById('mapSvg');
+  if (!svg) return;
+  // すべてのpathの不透明度を下げる、当該ノードに関わるものだけ強調
+  const card = CARD_BY_ID[cid];
+  if (!card) return;
+  const relIds = new Set((card.related || []).filter(r => r.type === '対比' || r.type === 'セット').map(r => r.id));
+  // 逆方向（自分を参照しているもの）も
+  ALL_CARDS.forEach(c => {
+    (c.related || []).forEach(r => {
+      if (r.id === cid && (r.type === '対比' || r.type === 'セット')) relIds.add(c.id);
+    });
+  });
+
+  svg.querySelectorAll('.map-node').forEach(g => {
+    const id = g.dataset.cid;
+    const text = g.querySelector('text');
+    if (!text) return;
+    if (!on) {
+      text.setAttribute('font-weight', '400');
+      g.querySelector('rect').setAttribute('fill', 'transparent');
+    } else if (id === cid) {
+      text.setAttribute('font-weight', '700');
+      g.querySelector('rect').setAttribute('fill', 'rgba(139, 58, 58, 0.08)');
+    } else if (relIds.has(id)) {
+      text.setAttribute('font-weight', '600');
+      g.querySelector('rect').setAttribute('fill', 'rgba(168, 138, 92, 0.1)');
+    }
+  });
+}
+
+// ========== 設定 ==========
+function renderSettings() {
+  document.querySelectorAll('#modeChips .chip').forEach(c => {
+    c.classList.toggle('active', c.dataset.mode === SETTINGS.mode);
+  });
+  document.querySelectorAll('#impChips .chip').forEach(c => {
+    c.classList.toggle('active', SETTINGS.imps.includes(c.dataset.imp));
+  });
+  document.querySelectorAll('#countChips .chip').forEach(c => {
+    c.classList.toggle('active', parseInt(c.dataset.count) === SETTINGS.count);
+  });
+  document.getElementById('toggleRelated').classList.toggle('on', SETTINGS.showRelated);
+  const cnt = Object.keys(IMP_OVERRIDE).length;
+  const lbl = document.getElementById('impOverrideCount');
+  if (lbl) lbl.textContent = cnt > 0
+    ? `現在 ${cnt} 件を自分で変更中`
+    : '変更したカードを全て初期値に戻す';
+}
+
+document.getElementById('modeChips').addEventListener('click', e => {
+  if (!e.target.classList.contains('chip')) return;
+  SETTINGS.mode = e.target.dataset.mode;
+  saveSettings(); renderSettings();
+});
+document.getElementById('impChips').addEventListener('click', e => {
+  if (!e.target.classList.contains('chip')) return;
+  const imp = e.target.dataset.imp;
+  if (SETTINGS.imps.includes(imp)) {
+    if (SETTINGS.imps.length > 1) SETTINGS.imps = SETTINGS.imps.filter(x => x !== imp);
+  } else {
+    SETTINGS.imps = [...SETTINGS.imps, imp];
+  }
+  saveSettings(); renderSettings();
+});
+document.getElementById('countChips').addEventListener('click', e => {
+  if (!e.target.classList.contains('chip')) return;
+  SETTINGS.count = parseInt(e.target.dataset.count);
+  saveSettings(); renderSettings();
+});
+document.getElementById('toggleRelated').addEventListener('click', () => {
+  SETTINGS.showRelated = !SETTINGS.showRelated;
+  saveSettings(); renderSettings();
+});
+document.getElementById('btnResetImp').addEventListener('click', () => {
+  const cnt = Object.keys(IMP_OVERRIDE).length;
+  if (cnt === 0) {
+    alert('変更された重要度はありません');
+    return;
+  }
+  if (confirm(`自分で変更した重要度 ${cnt} 件を初期値に戻しますか？`)) {
+    IMP_OVERRIDE = {};
+    localStorage.setItem(IMP_OVERRIDE_KEY, JSON.stringify(IMP_OVERRIDE));
+    alert('初期値に戻しました');
+    showView('dash');
+  }
+});
+document.getElementById('btnReset').addEventListener('click', () => {
+  if (confirm('学習履歴をすべてリセットしますか？')) {
+    STATE = {}; saveState(STATE);
+    alert('リセットしました');
+    showView('dash');
+  }
+});
+document.getElementById('btnExport').addEventListener('click', () => {
+  const data = JSON.stringify({
+    state: STATE,
+    settings: SETTINGS,
+    impOverride: IMP_OVERRIDE,
+    exportedAt: new Date().toISOString()
+  }, null, 2);
+  const blob = new Blob([data], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `zaihyo-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+document.getElementById('btnImport').addEventListener('click', () => {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.json';
+  input.onchange = e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const data = JSON.parse(reader.result);
+        if (data.state) { STATE = data.state; saveState(STATE); }
+        if (data.settings) { Object.assign(SETTINGS, data.settings); saveSettings(); }
+        if (data.impOverride) {
+          IMP_OVERRIDE = data.impOverride;
+          localStorage.setItem(IMP_OVERRIDE_KEY, JSON.stringify(IMP_OVERRIDE));
+        }
+        alert('取り込みました');
+        showView('dash');
+      } catch(err) { alert('読み込みに失敗しました: ' + err.message); }
+    };
+    reader.readAsText(f);
+  };
+  input.click();
+});
+
+// ========== ユーティリティ ==========
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeReg(s) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// ========== 初期化 ==========
+(async () => {
+  await loadCards();
+  renderDash();
+})();
+window.showView = showView;
+</script>
+</body>
+</html>
